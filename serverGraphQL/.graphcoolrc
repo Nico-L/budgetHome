@@ -1,0 +1,3 @@
+targets:
+  budgetFamille: shared-eu-west-1/cj9yb5szr1laj0198rzqlf9ih
+  default: budgetFamille

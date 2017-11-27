@@ -1,0 +1,32 @@
+# The following types define the data model of the example service
+# based on which the GraphQL API is generated
+
+type Budget @model {
+  id: ID! @isUnique
+  mois: String
+  annee: String
+  initialBudget: Float
+  operations: [Operation!]! @relation(name: "BudgetOperations")
+  revenues: [Float!]!
+  numeroBudget: Int @migrationValue(value: "0")
+}
+
+type Operation @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  name: String!
+  type: String!
+  somme: Float!
+  budget: Budget! @relation(name: "BudgetOperations")
+}
+
+type Abonnement @model {
+  id: ID! @isUnique
+  name: String!
+  somme: Float!
+}
+
+type DepenseType @model {
+  id: ID! @isUnique
+  liste: [String!]! @migrationValue(value: "[]")
+}
