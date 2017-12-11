@@ -46,7 +46,8 @@ import {
   Dialog
 } from 'quasar'
 import layoutStore from '../constants/layoutStore'
-import {GET_BUDGET_MOIS_ANNEE_QUERY, UPDATE_BUDGET_MUTATION, GET_DERNIER_BUDGET} from '../constants/graphql'
+import {GET_BUDGET_MOIS_ANNEE_QUERY, UPDATE_BUDGET_MUTATION, GET_DERNIER_BUDGET, CREATE_BUDGET_MUTATION} from '../constants/graphql'
+import {GET_MENSUALITES} from '../constants/queryMensualites'
 
 let timeStamp = Date.now()
 let mois = date.formatDate(timeStamp, 'MMMM', {
@@ -120,6 +121,11 @@ export default {
       }
     }
   },
+  computed: {
+    calculFixe: function () {
+
+    }
+  },
   methods: {
     addRow: function () {
       console.log(this.revenues)
@@ -133,87 +139,104 @@ export default {
       const annee = this.annee
       const id = this.budgetID
       const revenues = this.revenues
-      let initialBudget = 0
-      let numeroBudget = 0
-      if (this.dernierBudget.numeroBudget) {
-        if (!this.budgetExiste) {
-          numeroBudget = this.dernierBudget.numeroBudget + 1
+      let fraisFixes = 0
+      this.$apollo.query({
+        query: GET_MENSUALITES,
+        updateQueries: {
+        }
+      }).then((data) => {
+        console.log(data.data.allMensualites)
+        data.data.allMensualites.forEach((fraisFixe) => {
+          fraisFixes += fraisFixe.montant
+        })
+        let initialBudget = 0
+        let numeroBudget = 0
+        if (this.dernierBudget.numeroBudget) {
+          if (!this.budgetExiste) {
+            numeroBudget = this.dernierBudget.numeroBudget + 1
+          }
+          else {
+            numeroBudget = this.dernierBudget.numeroBudget
+          }
+        }
+        console.log('budget')
+        console.log(numeroBudget)
+        // console.log(this.revenues)
+        this.revenues.forEach((revenue) => {
+          initialBudget += revenue
+        })
+        console.log(initialBudget)
+        initialBudget -= fraisFixes
+        initialBudget = Number(initialBudget.toFixed(2))
+        console.log(initialBudget)
+        // Mutation
+        if (this.budgetExiste) {
+          console.log('modification')
+          this.$apollo.mutate({
+            mutation: UPDATE_BUDGET_MUTATION,
+            variables: {
+              id,
+              mois,
+              annee,
+              initialBudget,
+              revenues
+            },
+            updateQueries: {
+            }
+          }).then((data) => {
+            // Result
+            console.log(data)
+            let that = this
+            Dialog.create({
+              title: 'Succès',
+              message: 'Budget de ' + mois + annee + ' modifié avec succès.',
+              buttons: [{
+                label: 'OK',
+                handler () {
+                  // empty the trash bin, yo
+                  that.$router.push({name: 'accueil'})
+                }
+              }]
+            })
+          }).catch((error) => {
+            // Error
+            console.error(error)
+          })
         }
         else {
-          numeroBudget = this.dernierBudget.numeroBudget
+          console.log('pas correction')
+          this.$apollo.mutate({
+            mutation: CREATE_BUDGET_MUTATION,
+            variables: {
+              mois,
+              annee,
+              initialBudget,
+              revenues,
+              numeroBudget
+            },
+            updateQueries: {
+            }
+          }).then((data) => {
+            // Result
+            console.log(data)
+            Dialog.create({
+              title: 'Succès',
+              message: 'Budget de ' + mois + annee + ' créé avec succès.',
+              buttons: [{
+                label: 'OK',
+                handler () {
+                  this.$router.push({name: 'accueil'})
+                }
+              }]
+            })
+          }).catch((error) => {
+            // Error
+            console.error(error)
+          })
         }
-      }
-      console.log('budget')
-      console.log(numeroBudget)
-      // console.log(this.revenues)
-      this.revenues.forEach((revenue) => {
-        initialBudget += revenue
+      }).catch((error) => {
+        console.log(error)
       })
-      initialBudget = Number(initialBudget.toFixed(2))
-      // Mutation
-      if (this.budgetExiste) {
-        console.log('modification')
-        this.$apollo.mutate({
-          mutation: UPDATE_BUDGET_MUTATION,
-          variables: {
-            id,
-            mois,
-            annee,
-            initialBudget,
-            revenues
-          },
-          updateQueries: {
-          }
-        }).then((data) => {
-          // Result
-          console.log(data)
-          let that = this
-          Dialog.create({
-            title: 'Succès',
-            message: 'Budget de ' + mois + annee + ' modifié avec succès.',
-            buttons: [{
-              label: 'OK',
-              handler () {
-                // empty the trash bin, yo
-                that.$router.push({name: 'accueil'})
-              }
-            }]
-          })
-        }).catch((error) => {
-          // Error
-          console.error(error)
-        })
-      }
-      else {
-        console.log('pas correction')
-        /*
-        this.$apollo.mutate({
-          mutation: CREATE_BUDGET_MUTATION,
-          variables: {
-            mois,
-            annee,
-            initialBudget,
-            revenues,
-            numeroBudget
-          },
-          updateQueries: {
-          }
-        }).then((data) => {
-          // Result
-          console.log(data)
-          Dialog.create({
-            title: 'Succès',
-            message: 'Budget de ' + mois + annee + ' créé avec succès.',
-            buttons: [
-              'OK'
-            ]
-          })
-          this.$router.push('')
-        }).catch((error) => {
-          // Error
-          console.error(error)
-        }) */
-      }
     }
   }
 }

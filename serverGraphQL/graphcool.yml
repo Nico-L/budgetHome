@@ -19,11 +19,21 @@ types: ./types.graphql
 
 
 functions:
-  hello:
-    handler:
-      code: src/hello.js
-    type: resolver
-    schema: src/hello.graphql
+
+# added by google template: (please uncomment)
+# 
+ googleAuthentication:
+   handler:
+     code:
+       src: ./src/google/googleAuthentication.ts
+   type: resolver
+   schema: ./src/google/googleAuthentication.graphql
+ loggedInUser:
+   handler:
+     code:
+       src: ./src/google/loggedInUser.ts
+   type: resolver
+   schema: ./src/google/loggedInUser.graphql
 
 
 # Model/Relation permissions are used to limit the API access

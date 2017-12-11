@@ -125,8 +125,10 @@ export default {
           mois: this.moisSelect
         }
       },
+      fetchPolicy: 'network-only',
       loadingKey: 'loadingOperations',
       update (data) {
+        this.operations = []
         if (!data.allBudgets[0]) {
           return []
         }

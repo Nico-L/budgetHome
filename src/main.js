@@ -15,6 +15,9 @@ import Quasar from 'quasar'
 import router from './router'
 import 'quasar-extras/ionicons'
 
+import GSignInButton from 'vue-google-signin-button'
+Vue.use(GSignInButton)
+
 import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
@@ -54,6 +57,7 @@ Quasar.start(() => {
     el: '#q-app',
     router,
     apolloProvider,
-    render: h => h(require('./App').default)
+    render: h => h(require('./App').default),
+    validations: {}
   })
 })

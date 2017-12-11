@@ -12,6 +12,8 @@ let annee = date.formatDate(timeStamp, 'YYYY', {
   monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 })
 
+import auth from './utils/auth'
+
 Vue.use(VueRouter)
 
 function load (component) {
@@ -46,21 +48,25 @@ export default new VueRouter({
           component: load('accueil'),
           meta: {
             title: 'Budget pour le mois de ' + mois + ' ' + annee
-          }
+          },
+          beforeEnter: requireAuth
         },
         {
           path: 'entrees',
+          name: 'budgetMensuel',
           component: load('budgetMensuel'),
           meta: {
             title: 'Budget pour le mois de ' + mois + ' ' + annee
-          }
+          },
+          beforeEnter: requireAuth
         },
         {
           path: 'correctionDepense',
           component: load('correctionDepense'),
           meta: {
             title: 'Sélection de la dépense'
-          }
+          },
+          beforeEnter: requireAuth
         },
         {
           path: 'operation/:idOperation',
@@ -68,25 +74,58 @@ export default new VueRouter({
           props: true,
           meta: {
             title: 'Correction d\'une dépense'
-          }
+          },
+          beforeEnter: requireAuth
         },
         {
           path: 'operation',
           component: load('entreeOperations'),
           meta: {
             title: 'Entrer une nouvelle dépense pour le budget de ' + mois + annee
-          }
+          },
+          beforeEnter: requireAuth
         },
         {
           path: 'typeDepenses',
           component: load('listeTypes'),
           meta: {
             title: 'Les catégories de dépenses'
-          }
+          },
+          beforeEnter: requireAuth
+        },
+        {
+          path: 'listeMensualites',
+          component: load('mensualites'),
+          meta: {
+            title: 'Les charges fixes'
+          },
+          beforeEnter: requireAuth
         }
       ]
+    },
+    { path: '/logout',
+      beforeEnter (to, from, next) {
+        auth.logout()
+        next('/login')
+      }
+    },
+    {
+      path: '/login',
+      component: load('login')
     },
     // Always leave this last one
     { path: '*', component: load('Error404') } // Not found
   ]
 })
+
+function requireAuth (to, from, next) {
+  if (!auth.loggedIn()) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  }
+  else {
+    next()
+  }
+}

@@ -20,18 +20,30 @@
   </q-tabs>
   
   <q-scroll-area slot="left" style="width: 100%; height: 100%">
-    <q-list-header>Left Panel</q-list-header>
-    <q-side-link item to="correctionDepense">
+    <q-list-header>Operations</q-list-header>
+    <q-side-link item to="/">
+      <q-item-side icon="account circle" />
+      <q-item-main label="Bilan" />
+    </q-side-link>
+    <q-side-link item to="/correctionDepense">
       <q-item-side icon="account circle" />
       <q-item-main label="Corriger une dépense" />
     </q-side-link>
-    <q-side-link item to="typeDepenses">
+    <q-side-link item to="/typeDepenses">
       <q-item-side icon="account circle" />
       <q-item-main label="Les catégories de dépenses" />
     </q-side-link>
+    <q-side-link item to="/listeMensualites">
+      <q-item-side icon="account circle" />
+      <q-item-main label="Les charges fixes" />
+    </q-side-link>
+    <q-side-link item to="/logout">
+      <q-item-side icon="ion-log-out" />
+      <q-item-main label="Se déconnecter" />
+    </q-side-link>
   </q-scroll-area>
     
-  <router-view />
+  <router-view :key="$route.fullPath" />
   </q-layout>
 </template>
 
