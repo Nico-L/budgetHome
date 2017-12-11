@@ -36,7 +36,7 @@ export default function () {
 }
 ```
 and /src/constants/graphCoolURI.js:
-```
+``` javascript
 export const graphCoolURI = 'https://api.graph.cool/simple/v1/__YOUR_GRAPHCOOL_CREDENTIAL__'
 ```
 
