@@ -24,7 +24,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 
 import VueApollo from 'vue-apollo'
 
-const httpLink = new HttpLink({ uri: 'https://api.graph.cool/simple/v1/cj9yb5szr1laj0198rzqlf9ih' })
+import { graphCoolURI } from './constants/graphCoolURI'
+const httpLink = new HttpLink({ uri: graphCoolURI })
 
 const apolloClient = new ApolloClient({
   link: httpLink,
