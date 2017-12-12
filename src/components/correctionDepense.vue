@@ -23,9 +23,19 @@
     <div v-if="loadingOperations">Chargement des operations</div>
     <div v-else-if="nbOperations === 0">Pas d'opération pour ce mois</div>
     <div v-else>
-       <q-list>
+       <q-list v-if="dernierBudget">
         <q-list-header inset>Dépenses</q-list-header>
         <q-item v-for="operation in operations" :key="operation.id" :to="{ path: 'operation/'+operation.id}">
+          <q-item-side icon="ion-eye" inverted color="primary" />
+          <q-item-main>
+            <q-item-tile label>{{operation.name}}</q-item-tile>
+            <q-item-tile sublabel>Montant : {{operation.somme}} € - catégorie : {{operation.type}}</q-item-tile>
+          </q-item-main>
+        </q-item>
+        </q-list>
+        <q-list v-if="!dernierBudget">
+        <q-list-header inset>Dépenses</q-list-header>
+        <q-item v-for="operation in operations" :key="operation.id">
           <q-item-side icon="ion-eye" inverted color="primary" />
           <q-item-main>
             <q-item-tile label>{{operation.name}}</q-item-tile>
@@ -43,6 +53,10 @@ import {GET_BUDGET_ANNEES, GET_BUDGET_MOIS, GET_BUDGET_OPERATIONS} from '../cons
 
 let timeStamp = Date.now()
 let anneeCourante = date.formatDate(timeStamp, 'YYYY', {
+  dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+  monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+})
+let mois = date.formatDate(timeStamp, 'MMMM', {
   dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
   monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 })
@@ -72,7 +86,8 @@ export default {
       moisSelect: '',
       operations: [],
       loadingOperations: 0,
-      nbOperations: 0
+      nbOperations: 0,
+      dernierBudget: false
     }
   },
   apollo: {
@@ -134,6 +149,12 @@ export default {
         }
         else {
           this.nbOperations = data.allBudgets[0].operations.length
+          if (this.moisSelect === mois && this.anneeSelect === anneeCourante) {
+            this.dernierBudget = true
+          }
+          else {
+            this.dernierBudget = false
+          }
           return data.allBudgets[0].operations
         }
       }
