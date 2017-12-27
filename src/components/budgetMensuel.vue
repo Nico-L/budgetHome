@@ -48,7 +48,6 @@ import {
 import layoutStore from '../constants/layoutStore'
 import {GET_BUDGET_MOIS_ANNEE_QUERY, UPDATE_BUDGET_MUTATION, GET_DERNIER_BUDGET, CREATE_BUDGET_MUTATION} from '../constants/graphql'
 import {GET_MENSUALITES} from '../constants/queryMensualites'
-
 let timeStamp = Date.now()
 let mois = date.formatDate(timeStamp, 'MMMM', {
   dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -58,7 +57,6 @@ let annee = date.formatDate(timeStamp, 'YYYY', {
   dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
   monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 })
-
 export default {
   components: {
     QLayout,
@@ -123,7 +121,6 @@ export default {
   },
   computed: {
     calculFixe: function () {
-
     }
   },
   methods: {
@@ -244,9 +241,9 @@ export default {
 
 <style lang="stylus">
 @import '~variables'
-
 div.formRevenue
-  width: 500px
+  width: 100%
+  max-width: 500px
   padding: 10px
   
 div.formRevenue h4
@@ -254,5 +251,4 @@ div.formRevenue h4
   
 q-field
   margin-left: 50px
-
 </style>

@@ -16,7 +16,7 @@
   </q-toolbar>
   <q-tabs slot="navigation" v-if="!layoutStore.hideTabs">
       <q-route-tab slot="title" icon="ion-ios-download-outline" to="/operation" replace label="Entrer une dépense" />
-      <q-route-tab slot="title" icon="ion-filing" to="/entrees" replace label="Revenue du mois" />
+      <q-route-tab slot="title" icon="ion-filing" to="/entrees" replace label="Revenus du mois" />
   </q-tabs>
   
   <q-scroll-area slot="left" style="width: 100%; height: 100%">

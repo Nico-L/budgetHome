@@ -263,7 +263,8 @@ export default {
 @import '~variables'
 
 div.formOperations
-  width: 500px
+  width: 100%
+  max-width: 500px
   padding: 10px
   
 div.formRevenue h4

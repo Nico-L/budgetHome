@@ -167,7 +167,8 @@ export default {
 @import '~variables'
 
 div.formCorrectionDepense
-  width: 500px
+  width: 100%
+  max-width: 500px
   padding: 10px
   
 div.formRevenue h4

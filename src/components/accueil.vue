@@ -1,9 +1,12 @@
 <template>
+  <div class="corps">
   <donoughts 
     v-if="!loadingData"
     :data="{dataCollection}"
-    :options="{responsive: false, maintainAspectRatio: false}">
-  </donoughts>
+    :options="{responsive: true, maintainAspectRatio: true}">
+  </donoughts>    
+  </div>
+
 </template>
 
 <script>
@@ -112,5 +115,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
+@import '~variables'
+
+div.corps
+  width: 100%
+  max-width: 500px
+  padding: 10px
 </style>
