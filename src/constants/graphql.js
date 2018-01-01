@@ -32,7 +32,7 @@ query getBudget($mois:String!, $annee:String!){allBudgets(filter: { AND: [{annee
 `
 
 export const GET_DERNIER_BUDGET = gql`
-query getDernierBudget{allBudgets(first:1, orderBy: numeroBudget_DESC) {
+query getDernierBudget{allBudgets(first:1, skip:1, orderBy: numeroBudget_DESC) {
   numeroBudget
   operations {
     somme

@@ -24,7 +24,7 @@
   </div></div>
 <div class="row">
   <div class="col-1"></div>
-  <q-btn color="primary" class="col-6" icon="ion-plus-round" @click="addRow">Ajouter un revenue</q-btn>
+  <q-btn color="primary" class="col-6" icon="ion-plus-round" @click="addRow">Ajouter un revenu</q-btn>
   <span class="col-1"></span>
   <q-btn color="info"  class="col-4" icon="ion-compose" @click="createBudget">{{boutonValidation}}</q-btn>
   </div>
@@ -73,7 +73,7 @@ export default {
     return {
       layoutStore,
       reliquat: 0,
-      revenues: [0, 4116, 3000, 65],
+      revenues: [0, 4116.2, 3036.67, 64.93],
       mois: mois,
       annee: annee,
       allBudgets: [],
@@ -105,17 +105,21 @@ export default {
     dernierBudget: {
       query: GET_DERNIER_BUDGET,
       update (data) {
-        // console.log(data.allBudgets)
         return data.allBudgets[0]
       },
       result (result) {
-        this.revenues[0] = this.dernierBudget.initialBudget
-        // console.log(this.revenues[0])
-        this.dernierBudget.operations.forEach((operation) => {
-          // console.log(operation.somme)
-          this.revenues[0] -= operation.somme
-        })
-        this.revenues[0] = Number(this.revenues[0].toFixed(2))
+        if (this.dernierBudget) {
+          this.revenues[0] = this.dernierBudget.initialBudget
+          // console.log(this.revenues[0])
+          this.dernierBudget.operations.forEach((operation) => {
+            // console.log(operation.somme)
+            this.revenues[0] -= operation.somme
+          })
+          this.revenues[0] = Number(this.revenues[0].toFixed(2))
+        }
+        else {
+          this.revenues[0] = 0
+        }
       }
     }
   },
@@ -148,7 +152,7 @@ export default {
         })
         let initialBudget = 0
         let numeroBudget = 0
-        if (this.dernierBudget.numeroBudget) {
+        if (this.dernierBudget) {
           if (!this.budgetExiste) {
             numeroBudget = this.dernierBudget.numeroBudget + 1
           }
